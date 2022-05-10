@@ -3,7 +3,7 @@ import appoinment from '../../../assets/images/appointment.png';
 
 const Contact = () => {
     return (
-        <div style={{background:`url(${appoinment})`}} className='bg-primary px-7 lg:px-10 py-14 '>
+        <div style={{background:`url(${appoinment})`}} className='bg-primary rounded-lg px-7 lg:px-10 py-14 '>
           <div className='text-center pb-14 text-white'>
             <p className='text-xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-accent to-secondary'>
               Contact Us
