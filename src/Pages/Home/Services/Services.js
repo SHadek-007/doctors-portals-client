@@ -15,14 +15,14 @@ const Services = () => {
       img: fluride,
     },
     {
-      _id: "1",
+      _id: "2",
       name: "Cavity Filling",
       description:
         "Lorem Ipsum is simply dummy printing and typesetting indust Ipsum has been the",
       img: Cavity,
     },
     {
-      _id: "1",
+      _id: "3",
       name: "Teeth Whitening",
       description:
         "Lorem Ipsum is simply dummy printing and typesetting indust Ipsum has been the",
@@ -38,7 +38,7 @@ const Services = () => {
         </h3>
         <h1 className="text-4xl text-accent">Services We Provide</h1>
       </div>
-      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 px-12">
+      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 px-5 lg:px-12">
         {services.map((service) => (
           <Service key={service._id} service={service}></Service>
         ))}
