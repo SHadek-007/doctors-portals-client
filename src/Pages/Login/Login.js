@@ -3,6 +3,7 @@ import { useSignInWithEmailAndPassword, useSignInWithGoogle } from "react-fireba
 import auth from "../../firebase.init";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import useToken from "../../hooks/useToken";
 
 const Login = () => {
   const [signInWithGoogle, Guser, Gloading, Gerror] = useSignInWithGoogle(auth);
@@ -20,22 +21,23 @@ const Login = () => {
     error,
   ] = useSignInWithEmailAndPassword(auth);
 
+  const [token] = useToken(user || Guser)
+
   const navigate = useNavigate();
   const location = useLocation();
   let from = location.state?.from?.pathname || "/";
 
   useEffect(()=>{
-    if (user || Guser) {
+    if (token) {
       navigate(from, { replace: true });
     }
   
-  },[user,Guser,from,navigate]);
+  },[token,from,navigate]);
   
   if(loading || Gloading){
     return <div className="flex items-center justify-center ">
               <div className="w-16 h-16 border-b-2 border-gray-900 rounded-full animate-spin"></div>
            </div>
-    
   };
 
   let signInError;
@@ -45,7 +47,6 @@ const Login = () => {
 
   
   const onSubmit = (data) => {
-    console.log(data);
     signInWithEmailAndPassword(data.email, data.password)
   }
 
