@@ -4,60 +4,68 @@ import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 
 const AddDoctor = () => {
-    const { register, formState: { errors }, handleSubmit, reset } = useForm();
-  const { data: services, isLoading } = useQuery('services', () => fetch('http://localhost:5000/service').then(res => res.json()))
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    reset,
+  } = useForm();
+  const { data: services, isLoading } = useQuery("services", () =>
+    fetch("https://arcane-lowlands-25765.herokuapp.com/service").then((res) =>
+      res.json()
+    )
+  );
 
-  const imageStorageKey = '5f4ff350cb79f93908e57325665679c0';
+  const imageStorageKey = "5f4ff350cb79f93908e57325665679c0";
 
-    /**
-     * 3 ways to store images
-     * 1. Third party storage //Free open public storage is ok for Practice project 
-     * 2. Your own storage in your own server (file system)
-     * 3. Database: Mongodb 
-     * 
-     * YUP: to validate file: Search: Yup file validation for react hook form
-    */
+  /**
+   * 3 ways to store images
+   * 1. Third party storage //Free open public storage is ok for Practice project
+   * 2. Your own storage in your own server (file system)
+   * 3. Database: Mongodb
+   *
+   * YUP: to validate file: Search: Yup file validation for react hook form
+   */
   const onSubmit = async (data) => {
     const image = data.image[0];
     const formData = new FormData();
-    formData.append('image', image);
+    formData.append("image", image);
     const url = `https://api.imgbb.com/1/upload?key=${imageStorageKey}`;
     fetch(url, {
-        method:'POST',
-        body: formData
+      method: "POST",
+      body: formData,
     })
-    .then(res => res.json())
-    .then(result => {
-        if(result.success){
-            const img = result.data.url;
-            const doctor = {
-                name:data.name,
-                email:data.email,
-                specialty:data.specialty,
-                img:img
-            }
-            //send to your database
-            fetch('http://localhost:5000/doctor', {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json',
-                        authorization: `Bearer ${localStorage.getItem('accessToken')}`
-                    },
-                    body: JSON.stringify(doctor)
-                })
-                .then(res =>res.json())
-                .then(inserted =>{
-                    if(inserted.insertedId){
-                        toast.success('Doctor added successfully')
-                        reset();
-                    }
-                    else{
-                        toast.error('Failed to add the doctor');
-                    }
-                })
+      .then((res) => res.json())
+      .then((result) => {
+        if (result.success) {
+          const img = result.data.url;
+          const doctor = {
+            name: data.name,
+            email: data.email,
+            specialty: data.specialty,
+            img: img,
+          };
+          //send to your database
+          fetch("https://arcane-lowlands-25765.herokuapp.com/doctor", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+            body: JSON.stringify(doctor),
+          })
+            .then((res) => res.json())
+            .then((inserted) => {
+              if (inserted.insertedId) {
+                toast.success("Doctor added successfully");
+                reset();
+              } else {
+                toast.error("Failed to add the doctor");
+              }
+            });
         }
-    })
-  }
+      });
+  };
 
   if (isLoading) {
     return (
@@ -129,10 +137,15 @@ const AddDoctor = () => {
           <label className="label">
             <span className="label-text">Specialty</span>
           </label>
-          <select {...register('specialty')} className="select input-bordered w-full max-w-xs">
-              {
-                  services.map(service => <option key={service._id} value={service.name}>{service.name}</option>)
-              }
+          <select
+            {...register("specialty")}
+            className="select input-bordered w-full max-w-xs"
+          >
+            {services.map((service) => (
+              <option key={service._id} value={service.name}>
+                {service.name}
+              </option>
+            ))}
           </select>
         </div>
         <div className="form-control w-full max-w-xs">
